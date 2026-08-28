@@ -1,0 +1,128 @@
+﻿@model CognoGraphApp.Models.CareerSearchViewModel
+
+@{
+    ViewData["Title"] = "CareerPath Navigator";
+}
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <p class="text-uppercase text-primary fw-semibold mb-2">
+            Graph-powered career discovery
+        </p>
+        <h1 class="display-5 fw-bold">CareerPath Navigator</h1>
+        <p class="lead text-muted mx-auto" style="max-width: 720px;">
+            Explore a realistic career journey and discover the skills
+            and courses needed for your next role.
+        </p>
+    </div>
+
+    <div class="card shadow-sm border-0 mx-auto" style="max-width: 850px;">
+        <div class="card-body p-4 p-md-5">
+            <form asp-action="Index" method="post">
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3"></div>
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <label asp-for="CurrentRole" class="form-label fw-semibold">
+                            Current role
+                        </label>
+                        <select asp-for="CurrentRole" class="form-select">
+                            <option value="">Select your current role</option>
+                            @foreach (var role in Model.AvailableRoles)
+                            {
+                                <option value="@role">@role</option>
+                            }
+                        </select>
+                        <span asp-validation-for="CurrentRole"
+                              class="text-danger small"></span>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label asp-for="TargetRole" class="form-label fw-semibold">
+                            Target role
+                        </label>
+                        <select asp-for="TargetRole" class="form-select">
+                            <option value="">Select your target role</option>
+                            @foreach (var role in Model.AvailableRoles)
+                            {
+                                <option value="@role">@role</option>
+                            }
+                        </select>
+                        <span asp-validation-for="TargetRole"
+                              class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg w-100 mt-4">
+                    Find My Career Path
+                </button>
+            </form>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+    {
+        <div class="alert alert-warning mx-auto mt-4"
+             style="max-width: 850px;" role="alert">
+            @Model.ErrorMessage
+        </div>
+    }
+
+    @if (Model.Result is not null)
+    {
+        <section class="mx-auto mt-5" style="max-width: 850px;">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 p-md-5">
+                    <h2 class="h3 mb-2">Your recommended path</h2>
+                    <p class="text-muted">
+                        @Model.Result.Steps career transition(s) found through
+                        the graph database.
+                    </p>
+
+                    <div class="d-flex flex-wrap align-items-center gap-2 my-4">
+                        @for (var i = 0; i < Model.Result.Roles.Count; i++)
+                        {
+                            <span class="badge text-bg-primary fs-6 p-2" style="color:black">
+                                @(Model.Result.Roles[i])
+                            </span>
+
+                            @if (i < Model.Result.Roles.Count - 1)
+                            {
+                                <span class="text-muted fs-4">→</span>
+                            }
+                        }
+                    </div>
+
+                    <h3 class="h4 mt-4">Skills to develop</h3>
+
+                    @if (Model.Result.Skills.Any())
+                    {
+                        <div class="row g-3 mt-1">
+                            @foreach (var skill in Model.Result.Skills)
+                            {
+                                <div class="col-md-6">
+                                    <div class="border rounded p-3 h-100">
+                                        <div class="fw-semibold">@skill.SkillName</div>
+
+                                        @if (skill.Courses.Any())
+                                        {
+                                            <div class="small text-muted mt-2">
+                                                Learn through:
+                                                @string.Join(", ", skill.Courses)
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No skill recommendations available.</p>
+                    }
+                </div>
+            </div>
+        </section>
+    }
+</div>

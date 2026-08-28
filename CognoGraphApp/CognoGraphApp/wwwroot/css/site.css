@@ -1,0 +1,32 @@
+body {
+    background: #f6f8fc;
+}
+
+.card {
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08) !important;
+}
+
+.form-select {
+    min-height: 48px;
+    border-radius: 10px;
+}
+
+.btn-primary {
+    border-radius: 10px;
+    font-weight: 600;
+    padding: 12px 18px;
+}
+
+.badge {
+    border-radius: 999px;
+    padding: 10px 14px;
+}
+
+.alert {
+    border-radius: 12px;
+}
+
+h1, h2, h3 {
+    letter-spacing: -0.02em;
+}
